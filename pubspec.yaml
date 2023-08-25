@@ -1,0 +1,79 @@
+name: fz_cyber_quiz
+description: A new Flutter project.
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.1.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+
+  # The following adds the Cupertino Icons font to your application.
+  # Use with the CupertinoIcons class for iOS style icons.
+  cupertino_icons: ^1.0.2
+  flutter_svg:
+  google_fonts: ^5.1.0
+  fluttertoast: ^8.2.2
+  # animated
+  lottie: ^2.6.0
+  animated_text_kit: ^4.2.2
+  # PM P
+  get: ^4.6.5
+  provider: ^6.0.5
+  # Firebase
+  firebase_core: ^2.15.1
+  firebase_auth: ^4.7.3
+  cloud_firestore: ^4.8.5
+  firebase_database: ^10.2.5
+  google_sign_in: ^6.1.4
+  # Ath
+  shared_preferences: ^2.2.0
+  introduction_screen: ^3.1.11
+  rive: ^0.11.14
+  http: ^1.1.0
+  firebase_storage: ^11.2.6
+  image_picker: ^1.0.2
+  url_launcher: ^6.1.12
+  firebase_messaging: ^14.6.7
+  intl: ^0.18.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^2.0.0
+
+flutter:
+
+  uses-material-design: true
+
+  # To add assets to your application, add an assets section, like this:
+  assets:
+    - assets/icons/
+    - assets/image/
+    - assets/animation/
+    - assets/samples/animations/
+    - assets/samples/ui/rive_app/
+    - assets/samples/ui/rive_app/rive/
+    - assets/samples/ui/rive_app/images/
+    - assets/samples/ui/rive_app/images/backgrounds/
+    - assets/samples/ui/rive_app/images/topics/
+    - assets/samples/ui/rive_app/images/avatars/
+  fonts:
+    - family: Horizon
+      fonts:
+        - asset: assets/fonts/Horizon.ttf
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter-Regular.ttf
+        - asset: assets/fonts/Inter-SemiBold.ttf
+          weight: 600
+    - family: Poppins
+      fonts:
+        - asset: assets/fonts/Poppins-Bold.ttf
+          weight: 900
+  
