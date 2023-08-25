@@ -40,6 +40,8 @@ dependencies:
   url_launcher: ^6.1.12
   firebase_messaging: ^14.6.7
   intl: ^0.18.1
+  google_mobile_ads: ^3.0.0
+  connectivity_plus: ^4.0.2
 
 dev_dependencies:
   flutter_test:
