@@ -7,7 +7,7 @@ class AdState {
   AdState(this.initialization);
 
   String? get bannerAdUnitId => Platform.isAndroid
-      ? 'ca-app-pub-3940256099942544/6300978111' // Test AdUnitId.
+      ? 'ca-app-pub-9483658528214202/4442831056' // Test AdUnitId.
       // ? null // Use this stop ads and you can modify this behaviour in didChangeDependencies() of BannerAD().
       : 'ca-app-pub-3940256099942544/2934735716';
 

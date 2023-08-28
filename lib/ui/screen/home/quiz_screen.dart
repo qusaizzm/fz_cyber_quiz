@@ -1,8 +1,5 @@
-// import the material package
-
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
 import '../../../adsmob/ads/banner_ad.dart';
 import '../../../domain/models/db_connect.dart';
 import '../../../domain/models/question_model.dart';
@@ -12,8 +9,6 @@ import '../../widgets/option_card.dart';
 import '../../widgets/question_widget.dart';
 import '../../widgets/result_box.dart';
 
-// create the QuizQsAns widget
-// I'm taking the Stateful widget because it's going to be our parent widget and all the functions and variables will be in this widget so we will need to change state of our widget.
 class QuizQsAns extends StatefulWidget {
   final quizName;
   const QuizQsAns({Key? key, this.quizName}) : super(key: key);
@@ -45,7 +40,13 @@ class _QuizQsAnsState extends State<QuizQsAns> {
   bool isPressed = false;
   // create a function to display the next question
   bool isAlreadySelected = false;
+  int? selectedIndex;
+  bool isCerrectAnswer = false;
+  int? isCerrectAnswerValue;
+
+  Color isErrColore = const Color.fromARGB(255, 196, 88, 81);
   void nextQuestion(int questionLength) {
+    selectedIndex = 9;
     if (index == questionLength - 1) {
       // this is the block where the questions end.
       showDialog(
@@ -100,6 +101,19 @@ class _QuizQsAnsState extends State<QuizQsAns> {
     Navigator.pop(context);
   }
 
+  Color getTheRightColor(index) {
+    if (isPressed) {
+      if (index == isCerrectAnswerValue) {
+        print("cccccccccccccccccccccccccccccccc");
+        return AppColor.correct;
+      } else if (index == selectedIndex &&
+          selectedIndex != isCerrectAnswerValue) {
+        return AppColor.incorrect;
+      }
+    }
+    return AppColor.neutral;
+  }
+
   @override
   Widget build(BuildContext context) {
     // use the FutureBuilder Widget
@@ -114,27 +128,13 @@ class _QuizQsAnsState extends State<QuizQsAns> {
           } else if (snapshot.hasData) {
             var extractedData = snapshot.data as List<Question>;
             var ops = extractedData[index].options;
-            print("ops" + ops.toString());
-            print("ops.values.toList()[i]" + ops.values.toList().toString());
             print(isPressed);
-
+            for (int i = 0; i < ops.length; i++) {
+              if (ops.values.toList()[i] == true) {
+                isCerrectAnswerValue = i;
+              }
+            }
             return Scaffold(
-              // change the background
-              // backgroundColor: background,
-              // appBar: AppBar(
-              //   title: const Text('Quiz App'),
-              //   // backgroundColor: background,
-              //   shadowColor: Colors.transparent,
-              //   actions: [
-              //     Padding(
-              //       padding: const EdgeInsets.all(18.0),
-              //       child: Text(
-              //         'Score: $score',
-              //         style: const TextStyle(fontSize: 18.0),
-              //       ),
-              //     ),
-              //   ],
-              // ),
               body: SafeArea(
                 child: Container(
                   width: double.infinity,
@@ -171,24 +171,32 @@ class _QuizQsAnsState extends State<QuizQsAns> {
                       const SizedBox(height: 50.0),
                       for (int i = 0; i < ops.length; i++)
                         GestureDetector(
-                          onTap: () {
-                            checkAnswerAndUpdate(ops.values.toList()[i]);
+                          onTap: () { 
+                            if (isPressed == false) {
+                              selectedIndex = i;
+
+                              checkAnswerAndUpdate(ops.values.toList()[i]);
+                              setState(() {});
+                            } else {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(const SnackBar(
+                                content: Center(child: Text('Click Naxt')),
+                                behavior: SnackBarBehavior.floating,
+                                margin: EdgeInsets.symmetric(
+                                    vertical: 20.0, horizontal: 20),
+                              ));
+                            }
                           },
                           child: OptionCard(
                             option: ops.keys.toList()[i],
-                            color: isPressed
-                                ? ops.values.toList()[i] == true
-                                    ? AppColor.correct
-                                    : AppColor.incorrect
-                                : Colors.grey,
+                            color: getTheRightColor(i),
+                            errColor: isErrColore,
                           ),
                         ),
                     ],
                   ),
                 ),
               ),
-
-              // use the floating action button
               floatingActionButton: MyButton(
                 onTap: () {
                   isPressed
