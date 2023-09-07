@@ -4,7 +4,7 @@ import 'package:fz_cyber_quiz/firebase_options.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'adsmob/ads/ad_state.dart';
- 
+
 import 'ui/screen/intro/splash.dart';
 import 'ui/shared/constant.dart';
 
@@ -13,13 +13,14 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  final initFuture = MobileAds.instance.initialize();
-  final adState = AdState(initFuture);
+  // final initFuture = MobileAds.instance.initialize();
+  // final adState = AdState(initFuture);
 
-  runApp(Provider.value(
-      value: adState, builder: (context, child) => const Test01()));
+  runApp(Test01());
+  // runApp(Provider.value(
+  //     value: adState, builder: (context, child) =>  Test01()));
 }
- 
+
 class Test01 extends StatelessWidget {
   const Test01({super.key});
 
@@ -35,7 +36,6 @@ class Test01 extends StatelessWidget {
             color: const Color(0xFF151026),
           ),
         ),
-        home:  SplashScreen());
-        
+        home: SplashScreen());
   }
 }

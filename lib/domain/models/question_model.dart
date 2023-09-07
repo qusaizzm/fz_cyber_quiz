@@ -16,10 +16,17 @@ class Question {
     required this.title,
     required this.options,
   });
+ factory Question.fromJson(Map<String, dynamic> json) => Question(
+        id: json["id"],
+        title: json["title"],
+        options: json["question"],
+        //  Address.fromJson(json["address"]),
+      );
 
   // override the toString method to print the questions on console
   @override
   String toString() {
     return 'Question(id: $id, title: $title, options: $options)';
   }
+    
 }

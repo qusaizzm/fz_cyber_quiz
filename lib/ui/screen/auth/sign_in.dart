@@ -1,7 +1,9 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
- 
+import 'package:lottie/lottie.dart';
+
 import '../../../domain/firebaseauth_methods.dart';
 import '../../widgets/auth/my_textfield.dart';
 import '../../widgets/my_button.dart';
@@ -20,56 +22,59 @@ class _SignINQuizState extends State<SignINQuiz> {
   User? user = FirebaseAuth.instance.currentUser;
   late bool loggedin;
   FirebaseAuthMethods firebaseAuthMethods = FirebaseAuthMethods();
+  bool _isDB_Connected = false;
   FocusNode emailFocus = FocusNode();
   FocusNode passFocus = FocusNode();
-  // // // ValidationMethods validationMethods = ValidationMethods();
 
-  //text editing controllers
   final emailController = TextEditingController();
   final passController = TextEditingController();
   final GlobalKey<FormState> _key = GlobalKey<FormState>();
 
-  // sign user in method
   void signUserUp() async {
-    if (emailController.text.trim().isEmpty) {
-      Fluttertoast.showToast(
-          msg: "Please Enter Email",
-          toastLength: Toast.LENGTH_SHORT,
-          timeInSecForIosWeb: 1,
-          // backgroundColor: Style.white,
-          // textColor: Style.black,
-          fontSize: 14.0);
-    } else if (passController.text.trim().isEmpty) {
-      Fluttertoast.showToast(
-          msg: "Please Enter Password",
-          toastLength: Toast.LENGTH_SHORT,
-          timeInSecForIosWeb: 1,
-          // backgroundColor: Style.white,
-          // textColor: Style.black,
-          fontSize: 14.0);
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    print(connectivityResult);
+    if (connectivityResult == ConnectivityResult.wifi ||
+        connectivityResult == ConnectivityResult.mobile) {
+      _isDB_Connected = true;
     } else {
-      firebaseAuthMethods
-          .signIn(
-              email: emailController.text.trim(),
-              password: passController.text.trim(),
-              context: context)
-          .whenComplete(() {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (_) => HomeScreen0122(),
-          ),
-        );
-      });
-      print("object");
-      // }
-
-      // Navigator.pushReplacement(
-      //   context,
-      //   MaterialPageRoute(
-      //     builder: (context) => LoginPage(),
-      //   ),
-      // );
+      _isDB_Connected = false;
+    }
+    if (_isDB_Connected) {
+      if (emailController.text.trim().isEmpty) {
+        Fluttertoast.showToast(
+            msg: "Please Enter Email",
+            toastLength: Toast.LENGTH_SHORT,
+            timeInSecForIosWeb: 1,
+            fontSize: 14.0);
+      } else if (passController.text.trim().isEmpty) {
+        Fluttertoast.showToast(
+            msg: "Please Enter Password",
+            toastLength: Toast.LENGTH_SHORT,
+            timeInSecForIosWeb: 1,
+            fontSize: 14.0);
+      } else {
+        firebaseAuthMethods
+            .signIn(
+                email: emailController.text.trim(),
+                password: passController.text.trim(),
+                context: context)
+            .whenComplete(() {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (_) => HomeScreen0122(),
+            ),
+          );
+        });
+        print("object");
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          duration: Duration(seconds: 2),
+          content: Center(child: Text("Check Internt")),
+        ),
+      );
     }
   }
 
@@ -84,7 +89,7 @@ class _SignINQuizState extends State<SignINQuiz> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[300],
+      // backgroundColor: Colors.grey[300],
       body: SafeArea(
         child: Form(
           key: _key,
@@ -95,24 +100,16 @@ class _SignINQuizState extends State<SignINQuiz> {
                 children: [
                   const SizedBox(height: 50),
                   //logo
-                  const Icon(
-                    Icons.lock,
-                    size: 50,
-                  ),
+                  Container(
+                      height: 150,
+                      child: Lottie.asset('assets/animation/lock.json')),
+
                   const SizedBox(height: 50),
 
                   //lets create an account for you
-                  Text(
-                    'Let\'s Login.',
-                    style: TextStyle(
-                      color: Colors.grey[300],
-                      fontSize: 16,
-                    ),
-                  ),
 
                   // email text field
 
-                  const SizedBox(height: 5),
                   MyTextField(
                     hintText: 'Email.',
                     controller: emailController,
@@ -128,7 +125,7 @@ class _SignINQuizState extends State<SignINQuiz> {
                     obsecuretext: true,
                     type: "pass",
                   ),
-                  const SizedBox(height: 5),
+                  const SizedBox(height: 15),
 
                   // sign in button
                   MyButton(

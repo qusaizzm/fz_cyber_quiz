@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
 import 'loading.dart';
- 
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -31,9 +30,14 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
 
     Timer(
-        Duration(seconds: 8),
-        () => Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => Loading())));
+      const Duration(milliseconds: 8500),
+      () => Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Loading(),
+        ),
+      ),
+    );
   }
 
   @override
@@ -53,10 +57,7 @@ class SplashWid extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Lottie.asset('assets/animation/splash.json'),
-
-        const SizedBox(height: 100),
-
+        Expanded(child: Lottie.asset('assets/animation/splash.json')),
         Row(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
@@ -85,8 +86,6 @@ class SplashWid extends StatelessWidget {
             ),
           ],
         ),
-        // // Load an animation and its images from a zip file
-        // Lottie.asset('assets/lottiefiles/angel.zip'),
       ],
     );
   }

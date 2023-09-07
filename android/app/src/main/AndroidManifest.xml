@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 <uses-permission android:name="android.permission.INTERNET"/>
     <application
-        android:label="fz_cyber_quiz/quiz_01"
+        android:label="Cyber Quiz: CyberSecurity 1000 Questions"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

@@ -155,7 +155,7 @@ class _QuesWidgetState extends State<QuesWidget> {
       setState(() {
         url = null;
         // if (file != null) {
-        file = File(img!.path);
+        file = File(img.path);
         // }
       });
     }

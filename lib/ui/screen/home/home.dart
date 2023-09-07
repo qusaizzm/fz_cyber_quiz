@@ -431,11 +431,11 @@ class _HomePageQuizState extends State<HomePageQuiz> {
     }
 
     return Scaffold(
-      bottomNavigationBar: Container(
-        // height: bottomBannerAd.size.height.toDouble(),
-        // width: bottomBannerAd.size.width.toDouble(),
-        child: BannerAD(),
-      ),
+      // bottomNavigationBar: Container(
+      //   // height: bottomBannerAd.size.height.toDouble(),
+      //   // width: bottomBannerAd.size.width.toDouble(),
+      //   child: BannerAD(),
+      // ),
       body: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,

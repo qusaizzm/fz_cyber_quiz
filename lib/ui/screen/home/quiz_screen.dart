@@ -1,6 +1,8 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../../../adsmob/ads/banner_ad.dart';
+import '../../../domain/firebaseauth_methods.dart';
 import '../../../domain/models/db_connect.dart';
 import '../../../domain/models/question_model.dart';
 import '../../shared/constant.dart';
@@ -21,6 +23,8 @@ class _QuizQsAnsState extends State<QuizQsAns> {
   var db = DBconnect();
 
   late Future _questions;
+  // bool _isDB_Connected = false;
+  FirebaseAuthMethods firebaseAuthMethods = FirebaseAuthMethods();
 
   Future<List<Question>> getData() async {
     return db.fetchQuestions(widget.quizName);
@@ -28,6 +32,14 @@ class _QuizQsAnsState extends State<QuizQsAns> {
 
   @override
   void initState() {
+    // var connectivityResult = await (Connectivity().checkConnectivity());
+    // print(connectivityResult);
+    // if (connectivityResult == ConnectivityResult.wifi||
+    //     connectivityResult == ConnectivityResult.mobile) {
+    //   _isDB_Connected = true;
+    // } else {
+    //   _isDB_Connected = false;
+    // }
     _questions = getData();
     super.initState();
   }
@@ -117,6 +129,7 @@ class _QuizQsAnsState extends State<QuizQsAns> {
   @override
   Widget build(BuildContext context) {
     // use the FutureBuilder Widget
+
     return FutureBuilder(
       future: _questions as Future<List<Question>>,
       builder: (ctx, snapshot) {
@@ -127,109 +140,132 @@ class _QuizQsAnsState extends State<QuizQsAns> {
             );
           } else if (snapshot.hasData) {
             var extractedData = snapshot.data as List<Question>;
-            var ops = extractedData[index].options;
-            print(isPressed);
-            for (int i = 0; i < ops.length; i++) {
-              if (ops.values.toList()[i] == true) {
-                isCerrectAnswerValue = i;
+            if (extractedData.isNotEmpty) {
+              var ops = extractedData[index].options;
+              print("ops.length" + ops.length.toString());
+              print("ops.extractedData" + extractedData.toString());
+              for (int i = 0; i < ops.length; i++) {
+                if (ops.values.toList()[i] == true) {
+                  isCerrectAnswerValue = i;
+                }
               }
-            }
-            return Scaffold(
-              body: SafeArea(
-                child: Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                  child: Column(
-                    children: [
-                      Container(
-                        height: 50,
-                        width: double.infinity,
-                        // height: bottomBannerAd.size.height.toDouble(),
-                        // width: bottomBannerAd.size.width.toDouble(),
-                        child: BannerAD(),
-                      ),
-                      hSize(),
-                      hSize(),
-                      QuestionWidget(
-                        indexAction: index,
-                        score: score.toString(),
-                        totalQuestions: extractedData.length,
-                      ),
-                      const Divider(),
-                      // add some space
-                      const SizedBox(height: 25.0),
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          ' ${extractedData[index].title} :',
-                          style: const TextStyle(
-                            fontSize: 24.0,
-                            // color: neutral,
+              return Scaffold(
+                body: SafeArea(
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                    child: Column(
+                      children: [
+                        // Container(
+                        //   height: 50,
+                        //   width: double.infinity,
+                        //   // height: bottomBannerAd.size.height.toDouble(),
+                        //   // width: bottomBannerAd.size.width.toDouble(),
+                        //   child: BannerAD(),
+                        // ),
+                        hSize(),
+                        hSize(),
+                        QuestionWidget(
+                          indexAction: index,
+                          score: score.toString(),
+                          totalQuestions: extractedData.length,
+                        ),
+                        const Divider(),
+                        // add some space
+                        const SizedBox(height: 25.0),
+                        Container(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            ' ${extractedData[index].title} :',
+                            style: const TextStyle(
+                              fontSize: 24.0,
+                              // color: neutral,
+                            ),
                           ),
                         ),
-                      ),
-                      const SizedBox(height: 50.0),
-                      for (int i = 0; i < ops.length; i++)
-                        GestureDetector(
-                          onTap: () { 
-                            if (isPressed == false) {
-                              selectedIndex = i;
+                        const SizedBox(height: 50.0),
+                        for (int i = 0; i < ops.length; i++)
+                          GestureDetector(
+                            onTap: () {
+                              if (isPressed == false) {
+                                selectedIndex = i;
 
-                              checkAnswerAndUpdate(ops.values.toList()[i]);
-                              setState(() {});
-                            } else {
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(const SnackBar(
-                                content: Center(child: Text('Click Naxt')),
-                                behavior: SnackBarBehavior.floating,
-                                margin: EdgeInsets.symmetric(
-                                    vertical: 20.0, horizontal: 20),
-                              ));
-                            }
-                          },
-                          child: OptionCard(
-                            option: ops.keys.toList()[i],
-                            color: getTheRightColor(i),
-                            errColor: isErrColore,
+                                checkAnswerAndUpdate(ops.values.toList()[i]);
+                                setState(() {});
+                              } else {
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(const SnackBar(
+                                  content: Center(child: Text('Click Naxt')),
+                                  behavior: SnackBarBehavior.floating,
+                                  margin: EdgeInsets.symmetric(
+                                      vertical: 20.0, horizontal: 20),
+                                ));
+                              }
+                            },
+                            child: OptionCard(
+                              option: ops.keys.toList()[i],
+                              color: getTheRightColor(i),
+                              errColor: isErrColore,
+                            ),
                           ),
-                        ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              floatingActionButton: MyButton(
-                onTap: () {
-                  isPressed
-                      ? nextQuestion(extractedData.length)
-                      : Fluttertoast.showToast(
-                          msg: "Please Select answer",
-                          toastLength: Toast.LENGTH_SHORT,
-                          timeInSecForIosWeb: 1,
-                          fontSize: 14.0);
-                },
-                text: "Next",
-              ),
-              floatingActionButtonLocation:
-                  FloatingActionButtonLocation.centerFloat,
-            );
+                floatingActionButton: MyButton(
+                  onTap: () {
+                    isPressed
+                        ? nextQuestion(extractedData.length)
+                        : Fluttertoast.showToast(
+                            msg: "Please Select answer",
+                            toastLength: Toast.LENGTH_SHORT,
+                            timeInSecForIosWeb: 1,
+                            fontSize: 14.0);
+                  },
+                  text: "Next",
+                ),
+                floatingActionButtonLocation:
+                    FloatingActionButtonLocation.centerFloat,
+              );
+            } else
+              return Scaffold(
+                body: Container(
+                  child: Center(
+                    child: Text('No Data'),
+                  ),
+                ),
+              );
           }
         } else {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const CircularProgressIndicator(),
-                const SizedBox(height: 20.0),
-                Text(
-                  'Please Wait while Questions are loading..',
-                  style: TextStyle(
-                    color: Theme.of(context).primaryColor,
-                    decoration: TextDecoration.none,
-                    fontSize: 14.0,
+          return Container(
+            color: Colors.white,
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const CircularProgressIndicator(),
+                  const SizedBox(height: 20.0),
+                  Text(
+                    'Internt Poor',
+                    style: TextStyle(
+                      color: Theme.of(context).primaryColor,
+                      decoration: TextDecoration.none,
+                      fontSize: 14.0,
+                    ),
                   ),
-                ),
-              ],
+                  hSize(),
+                  hSize(),
+                  Text(
+                    'loading..',
+                    style: TextStyle(
+                      color: Theme.of(context).primaryColor,
+                      decoration: TextDecoration.none,
+                      fontSize: 14.0,
+                    ),
+                  ),
+                ],
+              ),
             ),
           );
         }

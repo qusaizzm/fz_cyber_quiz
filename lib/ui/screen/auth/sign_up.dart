@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart'; 
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:lottie/lottie.dart';
 import '../../../domain/firebaseauth_methods.dart';
 import '../../widgets/auth/my_textfield.dart';
 import '../../widgets/my_button.dart';
@@ -19,6 +21,7 @@ class _SignUPQuizState extends State<SignUPQuiz> {
   User? user = FirebaseAuth.instance.currentUser;
   late bool loggedin;
   FirebaseAuthMethods firebaseAuthMethods = FirebaseAuthMethods();
+  bool _isDB_Connected = false;
   FocusNode emailFocus = FocusNode();
   FocusNode passFocus = FocusNode();
   // // // ValidationMethods validationMethods = ValidationMethods();
@@ -32,86 +35,80 @@ class _SignUPQuizState extends State<SignUPQuiz> {
 
   // sign user in method
   void signUserUp() async {
-    if (_key.currentState!.validate()) {
-      if (passController.text.trim() != conPassController.text.trim()) {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    print(connectivityResult);
+    if (connectivityResult == ConnectivityResult.wifi ||
+        connectivityResult == ConnectivityResult.mobile) {
+      _isDB_Connected = true;
+    } else {
+      _isDB_Connected = false;
+    }
+    if (_isDB_Connected) {
+      if (_key.currentState!.validate()) {
+        if (passController.text.trim() != conPassController.text.trim()) {
+          Fluttertoast.showToast(
+              msg: "Password and re password are not same",
+              toastLength: Toast.LENGTH_SHORT,
+              timeInSecForIosWeb: 1,
+              fontSize: 14.0);
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              duration: Duration(seconds: 2),
+              content: Text("Sign up Success  "),
+            ),
+          );
+        }
+      }
+      if (nameController.text.trim().isEmpty) {
+        Fluttertoast.showToast(
+            msg: "Please Enter Name",
+            toastLength: Toast.LENGTH_SHORT,
+            timeInSecForIosWeb: 1,
+            fontSize: 14.0);
+      } else if (emailController.text.trim().isEmpty) {
+        Fluttertoast.showToast(
+            msg: "Please Enter Email",
+            toastLength: Toast.LENGTH_SHORT,
+            timeInSecForIosWeb: 1,
+            fontSize: 14.0);
+      } else if (passController.text.trim().isEmpty) {
+        Fluttertoast.showToast(
+            msg: "Please Enter Password",
+            toastLength: Toast.LENGTH_SHORT,
+            timeInSecForIosWeb: 1,
+            fontSize: 14.0);
+      } else if (conPassController.text.trim().isEmpty) {
+        Fluttertoast.showToast(
+            msg: "Please Enter Re Password",
+            toastLength: Toast.LENGTH_SHORT,
+            timeInSecForIosWeb: 1,
+            fontSize: 14.0);
+      } else if (passController.text.trim() != conPassController.text.trim()) {
         Fluttertoast.showToast(
             msg: "Password and re password are not same",
             toastLength: Toast.LENGTH_SHORT,
             timeInSecForIosWeb: 1,
-            // backgroundColor: Style.white,
-            // textColor: Style.black,
             fontSize: 14.0);
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            duration: Duration(seconds: 2),
-            content: Text("Sign up Success  "),
+        firebaseAuthMethods.signUp(
+            email: emailController.text.trim(),
+            password: passController.text.trim(),
+            context: context,
+            name: nameController.text.trim());
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => SignINQuiz(),
           ),
         );
       }
-    }
-    if (nameController.text.trim().isEmpty) {
-      Fluttertoast.showToast(
-          msg: "Please Enter Name",
-          toastLength: Toast.LENGTH_SHORT,
-          timeInSecForIosWeb: 1,
-          // backgroundColor: Style.white,
-          // textColor: Style.black,
-          fontSize: 14.0);
-    } else if (emailController.text.trim().isEmpty) {
-      Fluttertoast.showToast(
-          msg: "Please Enter Email",
-          toastLength: Toast.LENGTH_SHORT,
-          timeInSecForIosWeb: 1,
-          // backgroundColor: Style.white,
-          // textColor: Style.black,
-          fontSize: 14.0);
-    } else if (passController.text.trim().isEmpty) {
-      Fluttertoast.showToast(
-          msg: "Please Enter Password",
-          toastLength: Toast.LENGTH_SHORT,
-          timeInSecForIosWeb: 1,
-          // backgroundColor: Style.white,
-          // textColor: Style.black,
-          fontSize: 14.0);
-    } else if (conPassController.text.trim().isEmpty) {
-      Fluttertoast.showToast(
-          msg: "Please Enter Re Password",
-          toastLength: Toast.LENGTH_SHORT,
-          timeInSecForIosWeb: 1,
-          // backgroundColor: Style.white,
-          // textColor: Style.black,
-          fontSize: 14.0);
-      // } else if (phone_num.text.trim().isEmpty) {
-      //   Fluttertoast.showToast(
-      //       msg: "Please Enter Phone Number",
-      //       toastLength: Toast.LENGTH_SHORT,
-      //       timeInSecForIosWeb: 1,
-      //       backgroundColor: Style.white,
-      //       textColor: Style.black,
-      //       fontSize: 14.0);
-    } else if (passController.text.trim() != conPassController.text.trim()) {
-      Fluttertoast.showToast(
-          msg: "Password and re password are not same",
-          toastLength: Toast.LENGTH_SHORT,
-          timeInSecForIosWeb: 1,
-          // backgroundColor: Style.white,
-          // textColor: Style.black,
-          fontSize: 14.0);
     } else {
-      // addUserDetails(
-      //     email: emailController.text.trim(), name: nameController.text.trim());
-      firebaseAuthMethods.signUp(
-          email: emailController.text.trim(),
-          password: passController.text.trim(),
-          context: context,
-          name: nameController.text.trim());
-      // }
-
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => SignINQuiz(),
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          duration: Duration(seconds: 2),
+          content: Center(child: Text("Check Internt")),
         ),
       );
     }
@@ -146,14 +143,12 @@ class _SignUPQuizState extends State<SignUPQuiz> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const SizedBox(height: 50),
-                  //logo
-                  const Icon(
-                    Icons.lock,
-                    size: 50,
-                  ),
+                  Container(
+                      height: 150,
+                      child: Lottie.asset('assets/animation/lock.json')),
+
                   const SizedBox(height: 50),
 
-                  //lets create an account for you
                   Text(
                     'Let\'s create an account.',
                     style: TextStyle(
