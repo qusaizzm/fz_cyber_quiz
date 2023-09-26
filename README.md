@@ -1,9 +1,12 @@
 # fz_cyber_quiz/quiz_01
 
 A new Flutter project.
+
+[!<img src="assets/ui.jpg" width="200">](https://www.youtube.com/shorts/NRvJ8NUvBa0)
+
 ![](assets/ui.gif) 
-<img src="assets/ui.jpg" width="200">
-[![Alt text](assets/ui.jpg)](https://www.youtube.com/shorts/NRvJ8NUvBa0)
+
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
