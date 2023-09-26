@@ -1,7 +1,7 @@
 # fz_cyber_quiz/quiz_01
 
 A new Flutter project.
-![](https://github.com/Your_Repository_Name/Your_GIF_Name.gif) 
+![](assets/ui.gif) 
 [![Alt text](assets/ui.jpg)](https://www.youtube.com/shorts/NRvJ8NUvBa0)
 ## Getting Started
 
