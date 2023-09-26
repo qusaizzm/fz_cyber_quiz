@@ -2,6 +2,7 @@
 
 A new Flutter project.
 ![](assets/ui.gif) 
+<img src="assets/ui.jpg" width="200">
 [![Alt text](assets/ui.jpg)](https://www.youtube.com/shorts/NRvJ8NUvBa0)
 ## Getting Started
 
