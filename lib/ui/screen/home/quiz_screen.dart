@@ -1,7 +1,5 @@
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import '../../../adsmob/ads/banner_ad.dart';
 import '../../../domain/firebaseauth_methods.dart';
 import '../../../domain/models/db_connect.dart';
 import '../../../domain/models/question_model.dart';
@@ -176,7 +174,7 @@ class _QuizQsAnsState extends State<QuizQsAns> {
                         Container(
                           alignment: Alignment.centerLeft,
                           child: Text(
-                            ' ${extractedData[index].title} :',
+                            '${extractedData[index].title} :',
                             style: const TextStyle(
                               fontSize: 24.0,
                               // color: neutral,
