@@ -2,6 +2,11 @@
 
 A new Flutter project.
 
+[!<img src="assets/ui.jpg" width="200">](https://www.youtube.com/shorts/NRvJ8NUvBa0)
+
+![](assets/ui.gif) 
+
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
